@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+option csharp_namespace = "WeatherGrpcService";
+
+package grpctest;
+
+
+service CurrentWeather
+{
+  // С помощью ключевого слова rpc в сервисе определяется метод 
+  // Данный метод отправляет сообщение HelloRequest и сообщение HelloReply
+  rpc GetWeather (WeatherRequest) returns (WeatherResponse);
+}
+
+// Запрос погоды с указанием названия города и регина (RU)
+message WeatherRequest{
+  string cityName=1;
+  string stateCode=2;
+}
+
+// Ответ на запрос данных погоды
+message WeatherResponse {
+	int32 timezone=1;
+	int32 id=2;
+	int32 dt=3;
+	int32 cod=4;
+	string name=5;
+	int32 visibility=6;
+	string base=7;
+	repeated Weather weather=8;
+	Coord coord=9;
+	Main main=10;
+	Wind wind=11;
+	Clouds clouds=12;
+
+}
+
+message Coord{
+	 double lon=1;	
+	 double lat=2;
+}
+
+message Weather{
+	int32 id =1;	
+	string main=2;	
+	string description =3;	
+	string icon=4;
+}
+
+message Main{
+	 double Temp=1;	 
+	 double FeelsLike=2;	
+	 double TempMin=3;
+	 double TempMax=4;	
+	 int32 Pressure=5;	
+	 int32 Humidity=6;
+	 int32 SeaLevel=7;
+	 int32 GrndLevel=8;
+}
+
+message Wind {
+	double Speed=1;	
+	int32 Deg=2;	
+	double Gust=3;
+}
+
+message Clouds{
+	int32 all=1;
+}
+
+
