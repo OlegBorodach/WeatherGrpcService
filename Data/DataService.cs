@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using WeatherGrpcService.Model;
 
@@ -16,17 +17,24 @@ namespace WeatherGrpcService.Data
     {
         private readonly IHttpClientFactory _httpClientFactory;
 
-        public DataService(IHttpClientFactory httpClientFactory)
+        private readonly IConfiguration _configuration;
+
+        public DataService(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             _httpClientFactory = httpClientFactory;
+            _configuration = configuration;
         }
 
         private Uri BuildUri(string cityName, string stateCode)
         {
-            var builder = new UriBuilder("http", "api.openweathermap.org")
+            var host = _configuration.GetSection("WeatherSettings:Host").Value;
+            var units = _configuration.GetSection("WeatherSettings:Units").Value;
+            var lang = _configuration.GetSection("WeatherSettings:Lang").Value;
+            var appId = _configuration.GetSection("WeatherSettings:APPID").Value;
+
+            var builder = new UriBuilder("http", host)
             {
-                Path = "data/2.5/weather",
-                Query = $"APPID=923b1b2de969855de132ccc64b710c12&units=metric&lang=ru&q={cityName},{stateCode}"
+                Query = $"APPID={appId}&units={units}&lang={lang}&q={cityName},{stateCode}"
             };
             return builder.Uri;
         }
